@@ -1,0 +1,38 @@
+name: hr_management
+description: "A premium HR Management SaaS application."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.2.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  
+  # State Management
+  flutter_riverpod: ^2.5.1
+  
+  # Navigation
+  go_router: ^13.2.0
+  
+  # Theme & UI
+  flex_color_scheme: ^8.0.1
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.10+1
+  
+  # Features
+  table_calendar: ^3.1.2
+  intl: ^0.19.0
+  image_picker: ^1.1.2
+  geolocator: ^12.0.0
+  shimmer: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
