@@ -25,6 +25,10 @@ class DashboardScreen extends ConsumerWidget {
             _SubscriptionBanner(theme: theme),
             const SizedBox(height: 32),
           ],
+
+          // Announcements Section
+          _AnnouncementSection(isOwner: isOwner),
+          const SizedBox(height: 32),
           
           // Welcome Section
           Row(
@@ -542,6 +546,171 @@ class _LeaveItem extends StatelessWidget {
             color: isPublic ? Colors.blue : Colors.orange,
             fontSize: 11,
             fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AnnouncementSection extends StatefulWidget {
+  final bool isOwner;
+  const _AnnouncementSection({required this.isOwner});
+
+  @override
+  State<_AnnouncementSection> createState() => _AnnouncementSectionState();
+}
+
+class _AnnouncementSectionState extends State<_AnnouncementSection> {
+  final List<Map<String, String>> _announcements = [
+    {'title': 'Eid Holidays', 'content': 'Company will be closed from May 10 to May 13 for Eid celebrations.', 'date': 'Today'},
+    {'title': 'New Policy', 'content': 'Remote work policy has been updated. Please check the Document Vault.', 'date': 'Yesterday'},
+  ];
+
+  void _showPostAnnouncementDialog() {
+    final titleController = TextEditingController();
+    final contentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Container(
+          width: 450,
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Post Announcement', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              const Text('Send a notification to all employees in your company', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              const SizedBox(height: 24),
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  filled: true,
+                  fillColor: Colors.grey.withOpacity(0.05),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: contentController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: 'Message Body',
+                  filled: true,
+                  fillColor: Colors.grey.withOpacity(0.05),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                ),
+              ),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Discard', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                  ),
+                  const SizedBox(width: 16),
+                  CustomButton(
+                    text: 'Publish Now',
+                    onPressed: () {
+                      if (titleController.text.isNotEmpty) {
+                        setState(() {
+                          _announcements.insert(0, {
+                            'title': titleController.text,
+                            'content': contentController.text,
+                            'date': 'Just Now',
+                          });
+                        });
+                        Navigator.pop(context);
+                        AppToast.showSuccess(context, 'Announcement Published Successfully');
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Company Announcements', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            if (widget.isOwner)
+              TextButton.icon(
+                onPressed: _showPostAnnouncementDialog,
+                icon: const Icon(Icons.add_circle_outline, size: 18),
+                label: const Text('Post New', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 140,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: _announcements.length,
+            itemBuilder: (context, index) {
+              final item = _announcements[index];
+              return Container(
+                width: 320,
+                margin: const EdgeInsets.only(right: 16),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: theme.colorScheme.primary.withOpacity(0.1)),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            item['date']!,
+                            style: TextStyle(color: theme.colorScheme.primary, fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const Icon(Icons.campaign_outlined, color: Colors.orange, size: 20),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(item['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    const SizedBox(height: 4),
+                    Text(
+                      item['content']!,
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ],

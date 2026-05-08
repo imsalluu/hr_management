@@ -95,8 +95,12 @@ class _SidebarContent extends StatelessWidget {
                     _SidebarItem(icon: Icons.dashboard_outlined, label: 'Dashboard', route: '/', current: currentLocation),
                   
                   // Management / Admin Only: Approvals
-                  if (role != UserRole.member && role != UserRole.systemOwner)
+                  if (role != UserRole.member && role != UserRole.systemOwner) ...[
                     _SidebarItem(icon: Icons.fact_check_outlined, label: 'Approvals', route: '/approvals', current: currentLocation),
+                    _SidebarItem(icon: Icons.payments_outlined, label: 'Payroll', route: '/payroll', current: currentLocation),
+                    _SidebarItem(icon: Icons.analytics_outlined, label: 'Performance', route: '/kpi', current: currentLocation),
+                    _SidebarItem(icon: Icons.folder_shared_outlined, label: 'Vault', route: '/vault', current: currentLocation),
+                  ],
                   
                   if (role != UserRole.systemOwner && role != UserRole.businessOwner) ...[
                     _SidebarItem(icon: Icons.fingerprint_rounded, label: 'Attendance', route: '/attendance', current: currentLocation),

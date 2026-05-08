@@ -17,6 +17,9 @@ import 'package:hr_management/features/admin/presentation/billing_screen.dart';
 import 'package:hr_management/features/admin/presentation/subscription_plans_screen.dart';
 import 'package:hr_management/features/employee/presentation/hr_management_screen.dart';
 import 'package:hr_management/features/employee/presentation/hr_profile_screen.dart';
+import 'package:hr_management/features/payroll/presentation/payroll_screen.dart';
+import 'package:hr_management/features/performance/presentation/kpi_screen.dart';
+import 'package:hr_management/features/documents/presentation/document_vault_screen.dart';
 import 'package:hr_management/shared/widgets/main_layout.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -74,6 +77,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           if (location == '/plans') title = 'Subscription Plans';
           if (location == '/hr-management') title = 'HR Management';
           if (location.startsWith('/hr-details')) title = 'HR Profile';
+          if (location == '/payroll') title = 'Payroll Management';
+          if (location == '/kpi') title = 'Performance (KPI)';
+          if (location == '/vault') title = 'Document Vault';
 
           return MainLayout(
             title: title,
@@ -139,6 +145,18 @@ final routerProvider = Provider<GoRouter>((ref) {
               final id = state.pathParameters['id'] ?? '2';
               return NoTransitionPage(child: HRProfileScreen(hrId: id));
             },
+          ),
+          GoRoute(
+            path: '/payroll',
+            pageBuilder: (context, state) => const NoTransitionPage(child: PayrollScreen()),
+          ),
+          GoRoute(
+            path: '/kpi',
+            pageBuilder: (context, state) => const NoTransitionPage(child: KPIScreen()),
+          ),
+          GoRoute(
+            path: '/vault',
+            pageBuilder: (context, state) => const NoTransitionPage(child: DocumentVaultScreen()),
           ),
         ],
       ),

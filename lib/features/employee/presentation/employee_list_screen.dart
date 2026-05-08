@@ -36,6 +36,87 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
     return months[month - 1];
   }
 
+  void _showBulkImportDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Container(
+          width: 450,
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
+                child: const Icon(Icons.upload_file_rounded, color: Colors.blue, size: 40),
+              ),
+              const SizedBox(height: 24),
+              const Text('Bulk Import Employees', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              const Text(
+                'Upload a CSV or Excel file containing employee details (Name, Role, Dept, Date).',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontSize: 13),
+              ),
+              const SizedBox(height: 32),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue.withOpacity(0.2), style: BorderStyle.solid),
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.blue.withOpacity(0.02),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(Icons.cloud_upload_outlined, color: Colors.blue, size: 32),
+                    const SizedBox(height: 12),
+                    const Text('Drag & Drop or Click to Browse', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12)),
+                    Text('Maximum file size: 10MB', style: TextStyle(color: Colors.grey.withOpacity(0.8), fontSize: 10)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: CustomButton(
+                      text: 'Start Import',
+                      onPressed: () {
+                        // Simulate CSV parsing
+                        Future.delayed(const Duration(seconds: 1), () {
+                          if (!mounted) return;
+                          setState(() {
+                            employees.addAll([
+                              {'name': 'Fahim Ahmed', 'role': 'Finance Manager', 'dept': 'Accounts', 'status': 'Active'},
+                              {'name': 'Sadia Karim', 'role': 'QA Engineer', 'dept': 'IT', 'status': 'Active'},
+                              {'name': 'Rakib Hasan', 'role': 'Sales Lead', 'dept': 'Sales', 'status': 'Active'},
+                            ]);
+                          });
+                          Navigator.pop(context);
+                          AppToast.showSuccess(context, 'Successfully imported 3 staff records');
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showAddEmployeeDialog() {
     final nameController = TextEditingController();
     final roleController = TextEditingController();
@@ -161,6 +242,16 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
                 const _FilterChip(label: 'IT Department'),
                 const _FilterChip(label: 'Active Only'),
                 const Spacer(),
+                OutlinedButton.icon(
+                  onPressed: _showBulkImportDialog,
+                  icon: const Icon(Icons.upload_file_rounded, size: 18),
+                  label: const Text('Bulk Import', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+                const SizedBox(width: 12),
                 if (!isDesktop)
                    IconButton(
                      onPressed: _showAddEmployeeDialog,
