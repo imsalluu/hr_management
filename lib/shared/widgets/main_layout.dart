@@ -110,6 +110,9 @@ class _SidebarContent extends StatelessWidget {
                     _SidebarItem(icon: Icons.people_outline, label: 'Employees', route: '/employee', current: currentLocation),
                   ],
 
+                  if (role == UserRole.businessOwner)
+                    _SidebarItem(icon: Icons.badge_outlined, label: 'HR Management', route: '/hr-management', current: currentLocation),
+
                   // System Owner Only
                   if (role == UserRole.systemOwner) ...[
                     _SidebarItem(icon: Icons.business_rounded, label: 'Businesses', route: '/tenants', current: currentLocation),

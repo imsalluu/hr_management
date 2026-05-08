@@ -43,9 +43,7 @@ class _ApprovalsScreenState extends State<ApprovalsScreen> {
         _requests[index]['status'] = newStatus;
       }
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Request $newStatus')),
-    );
+    AppToast.showInfo(context, 'Request $newStatus');
   }
 
   @override

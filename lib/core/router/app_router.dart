@@ -15,6 +15,8 @@ import 'package:hr_management/features/admin/presentation/tenant_management_scre
 import 'package:hr_management/features/admin/presentation/system_dashboard_screen.dart';
 import 'package:hr_management/features/admin/presentation/billing_screen.dart';
 import 'package:hr_management/features/admin/presentation/subscription_plans_screen.dart';
+import 'package:hr_management/features/employee/presentation/hr_management_screen.dart';
+import 'package:hr_management/features/employee/presentation/hr_profile_screen.dart';
 import 'package:hr_management/shared/widgets/main_layout.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -70,6 +72,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           if (location == '/system-dashboard') title = 'Platform Analytics';
           if (location == '/billing') title = 'Platform Billing';
           if (location == '/plans') title = 'Subscription Plans';
+          if (location == '/hr-management') title = 'HR Management';
+          if (location.startsWith('/hr-details')) title = 'HR Profile';
 
           return MainLayout(
             title: title,
@@ -124,6 +128,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/plans',
             pageBuilder: (context, state) => const NoTransitionPage(child: SubscriptionPlansScreen()),
+          ),
+          GoRoute(
+            path: '/hr-management',
+            pageBuilder: (context, state) => const NoTransitionPage(child: HRManagementScreen()),
+          ),
+          GoRoute(
+            path: '/hr-details/:id',
+            pageBuilder: (context, state) {
+              final id = state.pathParameters['id'] ?? '2';
+              return NoTransitionPage(child: HRProfileScreen(hrId: id));
+            },
           ),
         ],
       ),

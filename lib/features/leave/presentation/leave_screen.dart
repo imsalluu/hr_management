@@ -82,9 +82,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                         text: 'Submit Application',
                         fullWidth: true,
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Leave application submitted!')),
-                          );
+                          AppToast.showSuccess(context, 'Leave application submitted!');
                         },
                       ),
                     ],

@@ -145,9 +145,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                             backgroundColor: _isClockedIn ? Colors.red.shade400 : null,
                             onPressed: () {
                               if (_selfie == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please take a selfie first!')),
-                                );
+                                AppToast.showError(context, 'Please take a selfie first!');
                                 return;
                               }
                               setState(() => _isClockedIn = !_isClockedIn);

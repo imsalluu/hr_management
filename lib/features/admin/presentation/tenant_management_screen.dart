@@ -174,9 +174,7 @@ class _CreateTenantDialogState extends State<_CreateTenantDialog> {
     } else {
       // Final Submit
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Business registered successfully!'), backgroundColor: Colors.green),
-      );
+      AppToast.showSuccess(context, 'Business registered successfully!');
     }
   }
 

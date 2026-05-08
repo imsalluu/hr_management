@@ -2,21 +2,121 @@ import 'package:flutter/material.dart';
 import 'package:hr_management/shared/widgets/custom_widgets.dart';
 import 'package:hr_management/shared/widgets/main_layout.dart';
 
-class EmployeeListScreen extends StatelessWidget {
+class EmployeeListScreen extends StatefulWidget {
   const EmployeeListScreen({super.key});
+
+  @override
+  State<EmployeeListScreen> createState() => _EmployeeListScreenState();
+}
+
+class _EmployeeListScreenState extends State<EmployeeListScreen> {
+  final List<Map<String, String>> employees = [
+    {'name': 'Salman Hossain', 'role': 'Lead Developer', 'dept': 'IT', 'status': 'Active'},
+    {'name': 'Sarah Smith', 'role': 'HR Executive', 'dept': 'HR', 'status': 'Active'},
+    {'name': 'John Doe', 'role': 'Manager', 'dept': 'Operations', 'status': 'Away'},
+    {'name': 'Alex Johnson', 'role': 'UI Designer', 'dept': 'IT', 'status': 'Active'},
+    {'name': 'Emma Wilson', 'role': 'Supervisor', 'dept': 'Marketing', 'status': 'Active'},
+  ];
+
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      if (!mounted) return;
+      controller.text = "${picked.day} ${_getMonthName(picked.month)} ${picked.year}";
+    }
+  }
+
+  String _getMonthName(int month) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[month - 1];
+  }
+
+  void _showAddEmployeeDialog() {
+    final nameController = TextEditingController();
+    final roleController = TextEditingController();
+    final deptController = TextEditingController();
+    final joinDateController = TextEditingController();
+    final passwordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Container(
+          width: 500,
+          padding: const EdgeInsets.all(32),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Onboard New Employee', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                const Text('Create a new account for your staff member', style: TextStyle(color: Colors.grey, fontSize: 13)),
+                const SizedBox(height: 24),
+                _EmployeeInputField(controller: nameController, label: 'Full Name', icon: Icons.person_outline),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(child: _EmployeeInputField(controller: roleController, label: 'Role/Designation', icon: Icons.work_outline)),
+                    const SizedBox(width: 16),
+                    Expanded(child: _EmployeeInputField(controller: deptController, label: 'Department', icon: Icons.corporate_fare_outlined)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _EmployeeInputField(
+                  controller: joinDateController, 
+                  label: 'Join Date', 
+                  icon: Icons.calendar_today_outlined,
+                  readOnly: true,
+                  onTap: () => _selectDate(context, joinDateController),
+                ),
+                const SizedBox(height: 16),
+                _EmployeeInputField(controller: passwordController, label: 'Initial Password', icon: Icons.lock_outline, obscure: true),
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(width: 16),
+                    CustomButton(
+                      text: 'Create Account',
+                      onPressed: () {
+                        if (nameController.text.isNotEmpty && roleController.text.isNotEmpty) {
+                          setState(() {
+                            employees.insert(0, {
+                              'name': nameController.text,
+                              'role': roleController.text,
+                              'dept': deptController.text,
+                              'status': 'Active',
+                            });
+                          });
+                          Navigator.pop(context);
+                          AppToast.showSuccess(context, '${nameController.text} added to team successfully');
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDesktop = MediaQuery.of(context).size.width > 900;
-
-    final employees = [
-      {'name': 'Salman Hossain', 'role': 'Lead Developer', 'dept': 'IT', 'status': 'Active'},
-      {'name': 'Sarah Smith', 'role': 'HR Executive', 'dept': 'HR', 'status': 'Active'},
-      {'name': 'John Doe', 'role': 'Manager', 'dept': 'Operations', 'status': 'Away'},
-      {'name': 'Alex Johnson', 'role': 'UI Designer', 'dept': 'IT', 'status': 'Active'},
-      {'name': 'Emma Wilson', 'role': 'Supervisor', 'dept': 'Marketing', 'status': 'Active'},
-    ];
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -41,7 +141,7 @@ class EmployeeListScreen extends StatelessWidget {
                 CustomButton(
                   text: 'Add Employee',
                   icon: Icons.add_rounded,
-                  onPressed: () {},
+                  onPressed: _showAddEmployeeDialog,
                 ),
               ],
             ],
@@ -63,8 +163,8 @@ class EmployeeListScreen extends StatelessWidget {
                 const Spacer(),
                 if (!isDesktop)
                    IconButton(
-                     onPressed: () {},
-                     icon: const Icon(Icons.add_circle, color: Color(0xFFFFC107)),
+                     onPressed: _showAddEmployeeDialog,
+                     icon: const Icon(Icons.add_circle, color: Color(0xFFFFC107), size: 30),
                    ),
               ],
             ),
@@ -85,7 +185,8 @@ class EmployeeListScreen extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   leading: CircleAvatar(
                     radius: 20,
-                    backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=$index'),
+                    backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                    child: Text(employee['name']![0], style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
                   ),
                   title: Text(employee['name']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   subtitle: Text('${employee['role']} • ${employee['dept']}', style: const TextStyle(fontSize: 12)),
@@ -107,6 +208,42 @@ class EmployeeListScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _EmployeeInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final IconData icon;
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final bool obscure;
+
+  const _EmployeeInputField({
+    required this.controller,
+    required this.label,
+    required this.icon,
+    this.readOnly = false,
+    this.onTap,
+    this.obscure = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      readOnly: readOnly,
+      onTap: onTap,
+      obscureText: obscure,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, size: 20, color: Colors.grey),
+        filled: true,
+        fillColor: Colors.grey.withOpacity(0.05),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
   }

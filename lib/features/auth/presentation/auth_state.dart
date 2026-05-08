@@ -16,6 +16,10 @@ class UserModel {
   final UserRole role;
   final String? companyName;
   final String? profileImage;
+  final String? managerId;
+  final String? department;
+  final String? position;
+  final DateTime? joinedDate;
 
   UserModel({
     required this.id,
@@ -24,6 +28,10 @@ class UserModel {
     required this.role,
     this.companyName,
     this.profileImage,
+    this.managerId,
+    this.department,
+    this.position,
+    this.joinedDate,
   });
 
   factory UserModel.mock(UserRole role) {
@@ -33,13 +41,33 @@ class UserModel {
       case UserRole.businessOwner:
         return UserModel(id: '0', name: 'Salman Business', email: 'owner@company.com', role: role, companyName: 'Tech Corp');
       case UserRole.hr:
-        return UserModel(id: '2', name: 'Sarah HR', email: 'hr@company.com', role: role, companyName: 'Tech Corp');
+        return UserModel(
+          id: '2', 
+          name: 'Sarah HR', 
+          email: 'hr@company.com', 
+          role: role, 
+          companyName: 'Tech Corp',
+          department: 'HR',
+          position: 'Senior HR Manager',
+          joinedDate: DateTime(2023, 1, 15),
+        );
       case UserRole.lineManager:
-        return UserModel(id: '3', name: 'John Manager', email: 'manager@company.com', role: role, companyName: 'Tech Corp');
+        return UserModel(id: '3', name: 'John Manager', email: 'manager@company.com', role: role, companyName: 'Tech Corp', managerId: '2');
       case UserRole.supervisor:
-        return UserModel(id: '4', name: 'Jane Supervisor', email: 'supervisor@company.com', role: role, companyName: 'Tech Corp');
+        return UserModel(id: '4', name: 'Jane Supervisor', email: 'supervisor@company.com', role: role, companyName: 'Tech Corp', managerId: '3');
       case UserRole.member:
-        return UserModel(id: '5', name: 'Hossain Employee', email: 'employee@company.com', role: role, companyName: 'Tech Corp', profileImage: 'https://i.pravatar.cc/150?u=99');
+        return UserModel(
+          id: '5', 
+          name: 'Hossain Employee', 
+          email: 'employee@company.com', 
+          role: role, 
+          companyName: 'Tech Corp', 
+          profileImage: 'https://i.pravatar.cc/150?u=99',
+          managerId: '2',
+          department: 'IT',
+          position: 'Flutter Developer',
+          joinedDate: DateTime(2024, 6, 1),
+        );
     }
   }
 }

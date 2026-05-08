@@ -102,3 +102,42 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+class AppToast {
+  static void showSuccess(BuildContext context, String message) {
+    _show(context, message, Colors.green, Icons.check_circle_outline);
+  }
+
+  static void showError(BuildContext context, String message) {
+    _show(context, message, Colors.red, Icons.error_outline);
+  }
+
+  static void showInfo(BuildContext context, String message) {
+    _show(context, message, Colors.blue, Icons.info_outline);
+  }
+
+  static void _show(BuildContext context, String message, Color color, IconData icon) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 3),
+        elevation: 8,
+      ),
+    );
+  }
+}
