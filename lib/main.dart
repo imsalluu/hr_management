@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:hr_management/core/router/app_router.dart';
 import 'package:hr_management/core/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
   runApp(
     const ProviderScope(
       child: MyApp(),

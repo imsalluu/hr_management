@@ -26,10 +26,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final loggingIn = state.matchedLocation == '/login';
       if (!authState) return loggingIn ? null : '/login';
-      if (loggingIn) return '/';
-
+      
       final user = ref.read(currentUserProvider);
       final role = user?.role ?? UserRole.member;
+
+      if (loggingIn) {
+        return role == UserRole.systemOwner ? '/system-dashboard' : '/';
+      }
+
       final location = state.matchedLocation;
 
       // Protect management routes

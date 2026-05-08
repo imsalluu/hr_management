@@ -98,7 +98,7 @@ class _SidebarContent extends StatelessWidget {
                   if (role != UserRole.member && role != UserRole.systemOwner)
                     _SidebarItem(icon: Icons.fact_check_outlined, label: 'Approvals', route: '/approvals', current: currentLocation),
                   
-                  if (role != UserRole.systemOwner) ...[
+                  if (role != UserRole.systemOwner && role != UserRole.businessOwner) ...[
                     _SidebarItem(icon: Icons.fingerprint_rounded, label: 'Attendance', route: '/attendance', current: currentLocation),
                     _SidebarItem(icon: Icons.calendar_month_outlined, label: 'Calendar', route: '/calendar', current: currentLocation),
                     _SidebarItem(icon: Icons.beach_access_outlined, label: 'Leave', route: '/leave', current: currentLocation),
