@@ -38,7 +38,10 @@ class MainLayout extends ConsumerWidget {
           const SizedBox(width: 16),
         ],
       ),
-      drawer: isDesktop ? null : _Sidebar(currentLocation: GoRouterState.of(context).matchedLocation),
+      drawer: isDesktop ? null : Drawer(
+        backgroundColor: Colors.white,
+        child: _SidebarContent(currentLocation: GoRouterState.of(context).matchedLocation),
+      ),
       body: Row(
         children: [
           if (isDesktop)
@@ -48,7 +51,7 @@ class MainLayout extends ConsumerWidget {
                  color: Colors.white,
                  border: Border(right: BorderSide(color: Color(0x1A000000))),
                ),
-               child: _Sidebar(currentLocation: GoRouterState.of(context).matchedLocation),
+               child: _SidebarContent(currentLocation: GoRouterState.of(context).matchedLocation),
              ),
           Expanded(child: child),
         ],
@@ -57,78 +60,75 @@ class MainLayout extends ConsumerWidget {
   }
 }
 
-class _Sidebar extends StatelessWidget {
+class _SidebarContent extends StatelessWidget {
   final String currentLocation;
-  const _Sidebar({required this.currentLocation});
+  const _SidebarContent({required this.currentLocation});
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
-      child: Column(
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.white),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.business_center, size: 48, color: Color(0xFFFFC107)),
-                SizedBox(height: 12),
-                Text('PeopleDesk', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87)),
-              ],
-            ),
+    return Column(
+      children: [
+        const DrawerHeader(
+          decoration: BoxDecoration(color: Colors.white),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.business_center, size: 48, color: Color(0xFFFFC107)),
+              SizedBox(height: 12),
+              const Text('PeopleDesk', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87)),
+            ],
           ),
-          Expanded(
-            child: Consumer(
-              builder: (context, ref, child) {
-                final user = ref.watch(currentUserProvider);
-                final role = user?.role ?? UserRole.member;
+        ),
+        Expanded(
+          child: Consumer(
+            builder: (context, ref, child) {
+              final user = ref.watch(currentUserProvider);
+              final role = user?.role ?? UserRole.member;
 
-                return ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    if (role == UserRole.systemOwner)
-                      _SidebarItem(icon: Icons.analytics_outlined, label: 'Platform Dashboard', route: '/system-dashboard', current: currentLocation),
+              return ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  if (role == UserRole.systemOwner)
+                    _SidebarItem(icon: Icons.analytics_outlined, label: 'Platform Dashboard', route: '/system-dashboard', current: currentLocation),
 
-                    if (role != UserRole.systemOwner)
-                      _SidebarItem(icon: Icons.dashboard_outlined, label: 'Dashboard', route: '/', current: currentLocation),
-                    
-                    // Management / Admin Only: Approvals
-                    if (role != UserRole.member && role != UserRole.systemOwner)
-                      _SidebarItem(icon: Icons.fact_check_outlined, label: 'Approvals', route: '/approvals', current: currentLocation),
-                    
-                    if (role != UserRole.systemOwner) ...[
-                      _SidebarItem(icon: Icons.fingerprint_rounded, label: 'Attendance', route: '/attendance', current: currentLocation),
-                      _SidebarItem(icon: Icons.calendar_month_outlined, label: 'Calendar', route: '/calendar', current: currentLocation),
-                      _SidebarItem(icon: Icons.beach_access_outlined, label: 'Leave', route: '/leave', current: currentLocation),
-                    ],
-                    
-                    // HR / Business Owner Only
-                    if (role == UserRole.hr || role == UserRole.businessOwner) ...[
-                      _SidebarItem(icon: Icons.schedule_outlined, label: 'Shifts', route: '/shift', current: currentLocation),
-                      _SidebarItem(icon: Icons.people_outline, label: 'Employees', route: '/employee', current: currentLocation),
-                    ],
-
-                    // System Owner Only
-                    if (role == UserRole.systemOwner) ...[
-                      _SidebarItem(icon: Icons.business_rounded, label: 'Businesses', route: '/tenants', current: currentLocation),
-                      _SidebarItem(icon: Icons.payments_outlined, label: 'Billing', route: '/billing', current: currentLocation),
-                    ],
-                    
-                    _SidebarItem(icon: Icons.person_outline, label: 'Profile', route: '/profile', current: currentLocation),
+                  if (role != UserRole.systemOwner)
+                    _SidebarItem(icon: Icons.dashboard_outlined, label: 'Dashboard', route: '/', current: currentLocation),
+                  
+                  // Management / Admin Only: Approvals
+                  if (role != UserRole.member && role != UserRole.systemOwner)
+                    _SidebarItem(icon: Icons.fact_check_outlined, label: 'Approvals', route: '/approvals', current: currentLocation),
+                  
+                  if (role != UserRole.systemOwner) ...[
+                    _SidebarItem(icon: Icons.fingerprint_rounded, label: 'Attendance', route: '/attendance', current: currentLocation),
+                    _SidebarItem(icon: Icons.calendar_month_outlined, label: 'Calendar', route: '/calendar', current: currentLocation),
+                    _SidebarItem(icon: Icons.beach_access_outlined, label: 'Leave', route: '/leave', current: currentLocation),
                   ],
-                );
-              },
-            ),
+                  
+                  // HR / Business Owner Only
+                  if (role == UserRole.hr || role == UserRole.businessOwner) ...[
+                    _SidebarItem(icon: Icons.schedule_outlined, label: 'Shifts', route: '/shift', current: currentLocation),
+                    _SidebarItem(icon: Icons.people_outline, label: 'Employees', route: '/employee', current: currentLocation),
+                  ],
+
+                  // System Owner Only
+                  if (role == UserRole.systemOwner) ...[
+                    _SidebarItem(icon: Icons.business_rounded, label: 'Businesses', route: '/tenants', current: currentLocation),
+                    _SidebarItem(icon: Icons.card_membership_outlined, label: 'Subscription Plans', route: '/plans', current: currentLocation),
+                    _SidebarItem(icon: Icons.payments_outlined, label: 'Billing', route: '/billing', current: currentLocation),
+                  ],
+                  
+                  _SidebarItem(icon: Icons.person_outline, label: 'Profile', route: '/profile', current: currentLocation),
+                ],
+              );
+            },
           ),
-          const Divider(),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('v1.0.0', style: TextStyle(color: Colors.grey, fontSize: 12)),
-          ),
-        ],
-      ),
+        ),
+        const Divider(),
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text('v1.0.0', style: TextStyle(color: Colors.grey, fontSize: 12)),
+        ),
+      ],
     );
   }
 }

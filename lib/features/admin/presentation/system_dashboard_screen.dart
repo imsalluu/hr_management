@@ -37,32 +37,32 @@ class SystemDashboardScreen extends StatelessWidget {
                 childAspectRatio: 2.5,
                 children: [
                   _PlatformStatCard(
-                    title: 'Total Revenue',
-                    value: '\$45,280',
-                    icon: Icons.payments_outlined,
+                    title: 'System Revenue',
+                    value: '\$145,280',
+                    icon: Icons.account_balance_wallet_outlined,
                     color: Colors.green,
-                    trend: '+12% this month',
+                    trend: '+15.2% vs last month',
                   ),
                   _PlatformStatCard(
-                    title: 'Active Businesses',
-                    value: '18',
-                    icon: Icons.business_rounded,
+                    title: 'Active Tenants',
+                    value: '24',
+                    icon: Icons.apartment_rounded,
                     color: Colors.blue,
-                    trend: '+2 new this week',
+                    trend: '4 new this month',
                   ),
                   _PlatformStatCard(
-                    title: 'Total Employees',
-                    value: '2,450',
-                    icon: Icons.people_outline,
+                    title: 'Total Users',
+                    value: '3,842',
+                    icon: Icons.person_search_outlined,
                     color: Colors.orange,
-                    trend: 'Across all tenants',
+                    trend: 'Across all businesses',
                   ),
                   _PlatformStatCard(
-                    title: 'System Uptime',
-                    value: '99.9%',
-                    icon: Icons.dns_outlined,
+                    title: 'Server Health',
+                    value: 'Healthy',
+                    icon: Icons.cloud_done_outlined,
                     color: Colors.purple,
-                    trend: 'Stable performance',
+                    trend: '99.98% Uptime',
                   ),
                 ],
               );
@@ -81,21 +81,55 @@ class SystemDashboardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Business Growth',
+                      'Platform Health',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     CustomCard(
-
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.auto_graph_rounded, size: 80, color: theme.colorScheme.primary.withValues(alpha: 0.1)),
-                            const SizedBox(height: 16),
-                            const Text('Growth Visualization Chart Placeholder', style: TextStyle(color: Colors.grey)),
-                          ],
-                        ),
+                      child: Column(
+                        children: [
+                          _HealthItem(label: 'Main API Gateway', status: 'Online', latency: '45ms'),
+                          const Divider(),
+                          _HealthItem(label: 'Database Cluster', status: 'Good', latency: '12ms'),
+                          const Divider(),
+                          _HealthItem(label: 'Storage Service', status: 'Online', latency: '89ms'),
+                          const Divider(),
+                          _HealthItem(label: 'Auth Service', status: 'Online', latency: '23ms'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    const Text(
+                      'Recent System Activity',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomCard(
+                      padding: EdgeInsets.zero,
+                      child: Column(
+                        children: [
+                          _ActivityItem(
+                            icon: Icons.add_business_rounded,
+                            title: 'New Business Registered',
+                            subtitle: '"Stellar Dynamics" joined the platform',
+                            time: '2 hours ago',
+                          ),
+                          const Divider(height: 1),
+                          _ActivityItem(
+                            icon: Icons.payment_rounded,
+                            title: 'Subscription Upgraded',
+                            subtitle: '"Tech Corp" moved to Enterprise Plan',
+                            time: '5 hours ago',
+                          ),
+                          const Divider(height: 1),
+                          _ActivityItem(
+                            icon: Icons.report_problem_outlined,
+                            title: 'Failed Payment Attempt',
+                            subtitle: '"Pied Piper" payment failed (Card Expired)',
+                            time: 'Yesterday',
+                            isError: true,
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -107,6 +141,23 @@ class SystemDashboardScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text(
+                      'Tenant Distribution',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    CustomCard(
+                      child: Column(
+                        children: [
+                          _PlanDistribution(label: 'Free Tier', count: 12, percent: 0.5, color: Colors.grey),
+                          const SizedBox(height: 16),
+                          _PlanDistribution(label: 'Standard', count: 8, percent: 0.33, color: Colors.blue),
+                          const SizedBox(height: 16),
+                          _PlanDistribution(label: 'Enterprise', count: 4, percent: 0.17, color: Colors.purple),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 32),
                     const Text(
                       'Expiring Subscriptions',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -136,6 +187,110 @@ class SystemDashboardScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _HealthItem extends StatelessWidget {
+  final String label;
+  final String status;
+  final String latency;
+
+  const _HealthItem({required this.label, required this.status, required this.latency});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green, size: 16),
+              const SizedBox(width: 12),
+              Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ],
+          ),
+          Row(
+            children: [
+              Text(status, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)),
+              const SizedBox(width: 12),
+              Text(latency, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActivityItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final String time;
+  final bool isError;
+
+  const _ActivityItem({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.time,
+    this.isError = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: (isError ? Colors.red : Colors.blue).withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, color: isError ? Colors.red : Colors.blue, size: 20),
+      ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+      subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+      trailing: Text(time, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+    );
+  }
+}
+
+class _PlanDistribution extends StatelessWidget {
+  final String label;
+  final int count;
+  final double percent;
+  final Color color;
+
+  const _PlanDistribution({
+    required this.label,
+    required this.count,
+    required this.percent,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+            Text('$count tenants', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        LinearProgressIndicator(
+          value: percent,
+          backgroundColor: color.withValues(alpha: 0.1),
+          valueColor: AlwaysStoppedAnimation<Color>(color),
+          borderRadius: BorderRadius.circular(4),
+          minHeight: 8,
+        ),
+      ],
     );
   }
 }

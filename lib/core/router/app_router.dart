@@ -14,6 +14,7 @@ import 'package:hr_management/features/management/presentation/approvals_screen.
 import 'package:hr_management/features/admin/presentation/tenant_management_screen.dart';
 import 'package:hr_management/features/admin/presentation/system_dashboard_screen.dart';
 import 'package:hr_management/features/admin/presentation/billing_screen.dart';
+import 'package:hr_management/features/admin/presentation/subscription_plans_screen.dart';
 import 'package:hr_management/shared/widgets/main_layout.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -64,6 +65,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           if (location == '/tenants') title = 'Business Management';
           if (location == '/system-dashboard') title = 'Platform Analytics';
           if (location == '/billing') title = 'Platform Billing';
+          if (location == '/plans') title = 'Subscription Plans';
 
           return MainLayout(
             title: title,
@@ -73,47 +75,51 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/',
-            builder: (context, state) => const DashboardScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: DashboardScreen()),
           ),
           GoRoute(
             path: '/attendance',
-            builder: (context, state) => const AttendanceScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: AttendanceScreen()),
           ),
           GoRoute(
             path: '/calendar',
-            builder: (context, state) => const CalendarScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: CalendarScreen()),
           ),
           GoRoute(
             path: '/leave',
-            builder: (context, state) => const LeaveScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: LeaveScreen()),
           ),
           GoRoute(
             path: '/employee',
-            builder: (context, state) => const EmployeeListScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: EmployeeListScreen()),
           ),
           GoRoute(
             path: '/profile',
-            builder: (context, state) => const ProfileScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: ProfileScreen()),
           ),
           GoRoute(
             path: '/shift',
-            builder: (context, state) => const ShiftScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: ShiftScreen()),
           ),
           GoRoute(
             path: '/approvals',
-            builder: (context, state) => const ApprovalsScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: ApprovalsScreen()),
           ),
           GoRoute(
             path: '/tenants',
-            builder: (context, state) => const TenantManagementScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: TenantManagementScreen()),
           ),
           GoRoute(
             path: '/system-dashboard',
-            builder: (context, state) => const SystemDashboardScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: SystemDashboardScreen()),
           ),
           GoRoute(
             path: '/billing',
-            builder: (context, state) => const BillingScreen(),
+            pageBuilder: (context, state) => const NoTransitionPage(child: BillingScreen()),
+          ),
+          GoRoute(
+            path: '/plans',
+            pageBuilder: (context, state) => const NoTransitionPage(child: SubscriptionPlansScreen()),
           ),
         ],
       ),
